@@ -60,6 +60,9 @@ class ShellInterface
     
     tree = []
     BeEF::Modules.get_categories.each { |c|
+        if c[-1,1] != "/"
+          c.concat("/")
+        end
         tree.push({
             'text' => c,
             'cls' => 'folder',
@@ -68,7 +71,21 @@ class ShellInterface
     }
 
     BeEF::Modules.get_enabled.each{|k, mod|
-      update_command_module_tree(tree, mod['category'], get_command_module_status(k), mod['name'],mod['db']['id'])
+
+      flatcategory = ""
+      if mod['category'].kind_of?(Array)
+        # Therefore this module has nested categories (sub-folders), munge them together into a string with '/' characters, like a folder.
+        mod['category'].each {|cat|
+          flatcategory << cat + "/"
+        }
+      else
+        flatcategory = mod['category']
+        if flatcategory[-1,1] != "/"
+          flatcategory.concat("/")
+        end
+      end
+
+      update_command_module_tree(tree, flatcategory, get_command_module_status(k), mod['name'],mod['db']['id'])
     }
 
     # if dynamic modules are found in the DB, then we don't have yaml config for them
@@ -245,7 +262,7 @@ class ShellInterface
         'os' => [BD.get(hook_session_id, 'OsName')]})
       
         when BeEF::Core::Constants::CommandModule::VERIFIED_NOT_WORKING
-          return "Verfied Not Working"
+          return "Verified Not Working"
         when BeEF::Core::Constants::CommandModule::VERIFIED_USER_NOTIFY
           return "Verified User Notify"
         when BeEF::Core::Constants::CommandModule::VERIFIED_WORKING
@@ -336,7 +353,7 @@ class ShellInterface
 
       page_name_row = {
         'category' => 'Host',
-        'data' => encoded_date_stamp,
+        'data' => encoded_date_stamp_hash,
         'from' => 'Initialization'
       }
 
@@ -352,6 +369,21 @@ class ShellInterface
       page_name_row = {
         'category' => 'Host',
         'data' => encoded_os_name_hash,
+        'from' => 'Initialization'
+      }
+
+      summary_grid_hash['results'].push(page_name_row) # add the row
+    end
+
+    # set and add the return values for the os name
+    hw_name = BD.get(self.targetsession, 'Hardware')
+    if not hw_name.nil?
+      encoded_hw_name = CGI.escapeHTML(hw_name)
+      encoded_hw_name_hash = { 'Hardware' => encoded_hw_name }
+
+      page_name_row = {
+        'category' => 'Host',
+        'data' => encoded_hw_name_hash,
         'from' => 'Initialization'
       }
 
@@ -529,6 +561,21 @@ class ShellInterface
       page_name_row = {
         'category' => 'Browser',
         'data' => encoded_has_flash_hash,
+        'from' => 'Initialization'
+      }
+
+      summary_grid_hash['results'].push(page_name_row) # add the row
+    end
+
+    # set and add the yes|no value for HasPhonegap
+    has_phonegap = BD.get(self.targetsession, 'HasPhonegap')
+    if not has_phonegap.nil?
+      encoded_has_phonegap = CGI.escapeHTML(has_phonegap)
+      encoded_has_phonegap_hash = { 'Has Phonegap' => encoded_has_phonegap }
+
+      page_name_row = {
+        'category' => 'Browser',
+        'data' => encoded_has_phonegap_hash,
         'from' => 'Initialization'
       }
 
