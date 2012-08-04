@@ -118,6 +118,14 @@ module BeEF
             self.err_msg "Invalid operating system name returned from the hook browser's initial connection."
           end
 
+          # get and store the hardware name
+          hw_name = get_param(@data['results'], 'Hardware')
+          if BeEF::Filters.is_valid_hwname?(hw_name)
+            BD.set(session_id, 'Hardware', hw_name)
+          else
+            self.err_msg "Invalid hardware name returned from the hook browser's initial connection."
+          end
+
           # get and store the date
           date_stamp = get_param(@data['results'], 'DateStamp')
           if BeEF::Filters.is_valid_date_stamp?(date_stamp)
@@ -222,6 +230,14 @@ module BeEF
             self.err_msg "Invalid value for HasFlash returned from the hook browser's initial connection."
           end
 
+          # get and store the yes|no value for HasPhonegap
+          has_phonegap = get_param(@data['results'], 'HasPhonegap')
+          if BeEF::Filters.is_valid_yes_no?(has_phonegap)
+            BD.set(session_id, 'HasPhonegap', has_phonegap)
+          else
+            self.err_msg "Invalid value for HasPhonegap returned from the hook browser's initial connection."
+          end
+
           # get and store the yes|no value for HasGoogleGears
           has_googlegears = get_param(@data['results'], 'HasGoogleGears')
           if BeEF::Filters.is_valid_yes_no?(has_googlegears)
@@ -263,7 +279,7 @@ module BeEF
           end
 
           # log a few info of newly hooked zombie in the console
-          print_info "New Hooked Browser [ip:#{zombie.ip}, type:#{browser_name}-#{browser_version}, os:#{os_name}], hooked domain [#{log_zombie_domain}:#{log_zombie_port.to_s}]"
+          print_info "New Hooked Browser [id:#{zombie.id}, ip:#{zombie.ip}, type:#{browser_name}-#{browser_version}, os:#{os_name}], hooked domain [#{log_zombie_domain}:#{log_zombie_port.to_s}]"
 
 
           # Call autorun modules

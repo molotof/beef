@@ -141,6 +141,54 @@ module BeEF
             error 400 # Bad Request
           end
         end
+
+        #@note Fire a new command module to multiple hooked browsers.
+        # Returns the command IDs of the launched modules, or 0 if firing got issues.
+        # POST request body example (for modules that don't need parameters, just remove "mod_params")
+        #  {
+        #    "mod_id":1,
+        #    "mod_params":{
+        #       "question":"are you hooked?"
+        #     },
+        #    "hb_ids":[1,2]
+        #   }
+        # response example: {"1":16,"2":17}
+        # curl example (alert module with custom text, 2 hooked browsers)):
+        #curl -H "Content-Type: application/json; charset=UTF-8" -d '{"mod_id":110,"mod_params":{"text":"mucci?"},"hb_ids":[1,2]}'
+        #-X POST http://127.0.0.1:3000/api/modules/multi?token=2316d82702b83a293e2d46a0886a003a6be0a633
+        post '/multi' do
+          request.body.rewind
+          begin
+            body = JSON.parse request.body.read
+
+            modk = BeEF::Module.get_key_by_database_id body["mod_id"]
+            error 404 unless modk != nil
+            mod_params = []
+
+            if body["mod_params"] != nil
+              body["mod_params"].each{|k,v|
+                mod_params.push({'name' => k, 'value' => v})
+              }
+            end
+
+            hb_ids = body["hb_ids"]
+            results = Hash.new
+            hb_ids.each do |hb_id|
+              hb = BeEF::Core::Models::HookedBrowser.first(:id => hb_id)
+              if hb == nil
+                results[hb_id] = 0
+                next
+              else
+                cmd_id = BeEF::Module.execute(modk, hb.session, mod_params)
+                results[hb_id] = cmd_id
+              end
+            end
+            results.to_json
+          rescue Exception => e
+            print_error "Invalid JSON input passed to endpoint /api/modules/multi"
+            error 400 # Bad Request
+          end
+        end
       end
     end
   end

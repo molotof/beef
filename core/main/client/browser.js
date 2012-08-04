@@ -181,11 +181,19 @@ beef.browser = {
 	},
 
 	/**
+	 * Returns true if FF14
+	 * @example: beef.browser.isFF14()
+	 */
+	isFF14: function() {
+		return !!window.history.replaceState && window.navigator.userAgent.match(/Firefox\/14\./) != null;
+	},
+
+	/**
 	 * Returns true if FF.
 	 * @example: beef.browser.isFF()
 	 */
 	isFF: function() {
-		return this.isFF2() || this.isFF3() || this.isFF3_5() || this.isFF3_6() || this.isFF4() || this.isFF5() || this.isFF6() || this.isFF7() || this.isFF8() || this.isFF9() || this.isFF10() || this.isFF11() || this.isFF12() || this.isFF13();
+		return this.isFF2() || this.isFF3() || this.isFF3_5() || this.isFF3_6() || this.isFF4() || this.isFF5() || this.isFF6() || this.isFF7() || this.isFF8() || this.isFF9() || this.isFF10() || this.isFF11() || this.isFF12() || this.isFF13() || this.isFF14();
 	},
 
 	/**
@@ -333,11 +341,27 @@ beef.browser = {
 	},
 
 	/**
+	 * Returns true if Chrome 20.
+	 * @example: beef.browser.isC20()
+	 */
+	isC20: function() {
+		return (!!window.chrome && !window.webkitPerformance) && ((parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10)==20)?true:false);
+	},
+
+    /**
+     * Returns true if Chrome 21.
+     * @example: beef.browser.isC21()
+     */
+    isC21: function() {
+        return (!!window.chrome && !window.webkitPerformance) && ((parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10)==21)?true:false);
+    },
+
+	/**
 	 * Returns true if Chrome.
 	 * @example: beef.browser.isC()
 	 */
 	isC: function() {
-		return this.isC5() || this.isC6() || this.isC7() || this.isC8() || this.isC9() || this.isC10() || this.isC11() || this.isC12() || this.isC13() || this.isC14() || this.isC15() || this.isC16()|| this.isC17() || this.isC18() || this.isC19();
+		return this.isC5() || this.isC6() || this.isC7() || this.isC8() || this.isC9() || this.isC10() || this.isC11() || this.isC12() || this.isC13() || this.isC14() || this.isC15() || this.isC16()|| this.isC17() || this.isC18() || this.isC19() || this.isC20() || this.isC21();
 	},
 
 	/**
@@ -372,12 +396,20 @@ beef.browser = {
            return (!!window.opera && (window.navigator.userAgent.match(/Opera\/9\.80.*Version\/11\./) != null));
        },
 
+        /**
+         * Returns true if Opera 12.xx.
+         * @example: beef.browser.isO12()
+         */
+        isO12: function() {
+            return (!!window.opera && (window.navigator.userAgent.match(/Opera\/9\.80.*Version\/12\./) != null));
+        },
+
 	/**
 	 * Returns true if Opera.
 	 * @example: beef.browser.isO()
 	 */
 	isO: function() {
-		return this.isO9_52() || this.isO9_60() || this.isO10() || this.isO11();
+		return this.isO9_52() || this.isO9_60() || this.isO10() || this.isO11() || this.isO12();
 	},
 		
 	/**
@@ -404,6 +436,8 @@ beef.browser = {
             C17:	this.isC17(),	// Chrome 17
 			C18:	this.isC18(),	// Chrome 18
 			C19:	this.isC19(),	// Chrome 19
+			C20:	this.isC20(),	// Chrome 20
+            C21:	this.isC21(),	// Chrome 21
 			C:	this.isC(), 	// Chrome any version
 
 			FF2:	this.isFF2(),	// Firefox 2
@@ -420,6 +454,7 @@ beef.browser = {
 			FF11:	this.isFF11(),	// Firefox 11
 			FF12:	this.isFF12(),	// Firefox 12
 			FF13:	this.isFF13(),	// Firefox 13
+			FF14:	this.isFF14(),	// Firefox 14
 			FF:	this.isFF(),	// Firefox any version
 
 			IE6:	this.isIE6(),	// Internet Explorer 6
@@ -432,6 +467,7 @@ beef.browser = {
 			O9_60:  this.isO9_60(), // Opera 9.60 through 9.64
 			O10:    this.isO10(),  	// Opera 10.xx
 			O11:    this.isO11(),  	// Opera 11.xx
+            O12:    this.isO12(),  	// Opera 11.xx
 			O:      this.isO(), 	// Opera any version
 
 			S4:	this.isS4(),	// Safari 4.xx
@@ -463,8 +499,10 @@ beef.browser = {
         if (this.isC17())	{ return '17' };	// Chrome 17
 		if (this.isC18())   { return '18' };    // Chrome 18
 		if (this.isC19())   { return '19' };    // Chrome 19
+		if (this.isC20())	{ return '20' };	// Chrome 20
+        if (this.isC21())	{ return '21' };	// Chrome 21
 
-		if (this.isFF2())	{ return '2'  };	// Firefox 2
+        if (this.isFF2())	{ return '2'  };	// Firefox 2
 		if (this.isFF3())	{ return '3'  };	// Firefox 3
 		if (this.isFF3_5())	{ return '3.5'};	// Firefox 3.5
 		if (this.isFF3_6())	{ return '3.6'};	// Firefox 3.6
@@ -478,6 +516,7 @@ beef.browser = {
 		if (this.isFF11())	{ return '11' };	// Firefox 11
 		if (this.isFF12())	{ return '12' };	// Firefox 12
 		if (this.isFF13())	{ return '13' };	// Firefox 13
+		if (this.isFF14())	{ return '14' };	// Firefox 14
 
 		if (this.isIE6())	{ return '6'  };	// Internet Explorer 6
 		if (this.isIE7())	{ return '7'  };	// Internet Explorer 7
@@ -491,6 +530,7 @@ beef.browser = {
 		if (this.isO9_60())	{ return '9.6'};	// Opera 9.6
 		if (this.isO10())	{ return '10' };	// Opera 10.xx
 		if (this.isO11())	{ return '11' };	// Opera 11.xx
+        if (this.isO12())	{ return '12' };	// Opera 12.xx
 
 		return 'UNKNOWN';				// Unknown UA
 	},
@@ -549,6 +589,19 @@ beef.browser = {
 
 		return (!!window.navigator.javaEnabled());
 	
+	},
+
+	/**
+	 * Checks if the Phonegap API is available from the hooked domain.
+	 * @return: {Boolean} true or false.
+	 *
+	 * @example: if(beef.browser.hasJava()) { ... }
+	*/
+	hasPhonegap: function() {
+		var result = false;
+		try { if (!!device.phonegap) result = true; else result = false; }
+		catch(e) { result = false; }
+		return result;
 	},
 
 	/**
@@ -765,6 +818,7 @@ beef.browser = {
 		var browser_plugins = beef.browser.getPlugins();
 		var date_stamp = new Date().toString();
 		var os_name = beef.os.getName();
+		var hw_name = beef.hardware.getName();
 		var system_platform = (typeof(navigator.platform) != "undefined" && navigator.platform != "") ? navigator.platform : null;
 		var browser_type = JSON.stringify(beef.browser.type(), function (key, value) {if (value == true) return value; else if (typeof value == 'object') return value; else return;});
 		var screen_size = beef.browser.getScreenSize();
@@ -772,6 +826,7 @@ beef.browser = {
 		var java_enabled = (beef.browser.javaEnabled())? "Yes" : "No";
 		var vbscript_enabled=(beef.browser.hasVBScript())? "Yes" : "No";
 		var has_flash = (beef.browser.hasFlash())? "Yes" : "No";
+		var has_phonegap = (beef.browser.hasPhonegap())? "Yes" : "No";
 		var has_googlegears=(beef.browser.hasGoogleGears())? "Yes":"No";
 		var has_web_socket=(beef.browser.hasWebSocket())? "Yes":"No";
 		var has_activex = (typeof(window.ActiveXObject) != "undefined") ? "Yes":"No";
@@ -789,6 +844,7 @@ beef.browser = {
 		if(hostport) details["HostPort"] = hostport;
 		if(browser_plugins) details["BrowserPlugins"] = browser_plugins;
 		if(os_name) details['OsName'] = os_name;
+		if(hw_name) details['Hardware'] = hw_name;
 		if(date_stamp) details['DateStamp'] = date_stamp;
 		if(system_platform) details['SystemPlatform'] = system_platform;
 		if(browser_type) details['BrowserType'] = browser_type;
@@ -797,6 +853,7 @@ beef.browser = {
 		if(java_enabled) details['JavaEnabled'] = java_enabled;
 		if(vbscript_enabled) details['VBScriptEnabled'] = vbscript_enabled
 		if(has_flash) details['HasFlash'] = has_flash
+		if(has_phonegap) details['HasPhonegap'] = has_phonegap
 		if(has_web_socket) details['HasWebSocket'] = has_web_socket
 		if(has_googlegears) details['HasGoogleGears'] = has_googlegears
 		if(has_activex) details['HasActiveX'] = has_activex;
